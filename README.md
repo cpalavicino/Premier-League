@@ -23,28 +23,11 @@ Para construir y validar el conjunto de equipos, así como analizar calendarios 
 | 2023-2024 | [CSV](https://www.football-data.co.uk/mmz4281/2324/E0.csv) |
 | 2024-2025 | [CSV](https://www.football-data.co.uk/mmz4281/2425/E0.csv) |
 | 2025-2026 | [CSV](https://www.football-data.co.uk/mmz4281/2526/E0.csv) |
+| 2026-2027 | [CSV](https://www.football-data.co.uk/mmz4281/2627/E0.csv) |
 
-El siguiente ejemplo descarga una temporada y conserva las columnas necesarias para identificar los enfrentamientos y su localía:
 
-```python
-import pandas as pd
 
-seasons_urls = {
-    "2021-2022": "https://www.football-data.co.uk/mmz4281/2122/E0.csv",
-    "2022-2023": "https://www.football-data.co.uk/mmz4281/2223/E0.csv",
-    "2023-2024": "https://www.football-data.co.uk/mmz4281/2324/E0.csv",
-    "2024-2025": "https://www.football-data.co.uk/mmz4281/2425/E0.csv",
-    "2025-2026": "https://www.football-data.co.uk/mmz4281/2526/E0.csv",
-}
-
-season = "2023-2024"
-df_premier = pd.read_csv(seasons_urls[season])
-df_matches = df_premier[["Date", "HomeTeam", "AwayTeam"]].dropna().copy()
-
-print(df_matches.head())
-```
-
-**Uso y limitaciones:** estos archivos describen partidos disputados, por lo que sirven como referencia histórica y para contrastar el modelo; no son por sí solos un calendario futuro optimizado. La columna `Date` registra la fecha del encuentro, pero no identifica necesariamente la jornada oficial. Por aplazamientos o reprogramaciones, no se debe asumir que ordenar los partidos solo por fecha reconstruye de forma exacta las jornadas de liga. Para evaluar breaks con jornadas oficiales se requiere obtener o construir esa correspondencia. Se necesita conexión a Internet para leer los CSV directamente desde sus enlaces.
+**Uso y limitaciones:** los notebooks de `INSTANCIAS_PRUEBA` leen cada CSV directamente desde su URL. El modelo usa los equipos de la temporada para construir un calendario nuevo; los CSV no aportan una correspondencia fiable entre partidos y jornadas oficiales, por lo que no se usan para fijar el calendario optimizado ni para calcular breaks históricos. Las listas de clásicos, estadios compartidos, equipos europeos y jornadas críticas deben completarse con datos adicionales si se quieren activar esas restricciones. Se necesita conexión a Internet y una licencia válida de Gurobi para resolver el modelo.
 
 
 ## Objetivo del proyecto
