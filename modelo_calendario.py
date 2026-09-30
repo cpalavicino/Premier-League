@@ -41,7 +41,8 @@ def resolver_instancia(
     max_clasicos_por_jornada=1,
     peso_breaks=1.0,
     peso_viajes=1.0,
-    tiempo_limite=60,
+    tiempo_limite=3600,
+    desactivar_cortes_heuristicas=False,
     numero_equipos_esperado=20,
     mostrar_log=True,
 ):
@@ -97,8 +98,12 @@ def resolver_instancia(
         raise ValueError("tiempo_limite debe ser positivo.")
 
     # Paso 2: crear variables de partidos, localía, breaks y viajes.
-    modelo = gp.Model(f"Calendario_Premier_League_{temporada}")
-    modelo.Params.TimeLimit = tiempo_limite
+    mdl = gp.Model(f"Calendario_Premier_League_{temporada}")
+    if desactivar_cortes_heuristicas:
+        mdl.setParam(GRB.Param.Cuts, 0)
+        mdl.setParam(GRB.Param.Heuristics, 0)
+    mdl.setParam("TimeLimit", tiempo_limite)
+    modelo = mdl
     modelo.Params.OutputFlag = int(mostrar_log)
 
     x = modelo.addVars(
@@ -330,6 +335,10 @@ def resolver_instancia(
         "estado": modelo.Status,
         "soluciones_factibles": modelo.SolCount,
         "objetivo": objetivo,
+        "cota": modelo.ObjBoundC,
+        "gap": modelo.MIPGap if modelo.SolCount > 0 else None,
+        "tiempo": modelo.Runtime,
+        "nodos": modelo.NodeCount,
         "breaks": breaks,
         "viajes_criticos": viajes_criticos,
         "calendario": calendario,
