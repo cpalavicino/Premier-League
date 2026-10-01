@@ -1,4 +1,9 @@
-"""Modelo general para construir calendarios doble Round-Robin con Gurobi."""
+"""Construcción y resolución de calendarios doble Round-Robin para la Premier League.
+
+El CSV histórico aporta los equipos, no fija los partidos ni las jornadas del
+nuevo calendario. El modelo asigna los partidos local/visitante a cada jornada,
+minimiza breaks y permite activar restricciones operativas con datos adicionales.
+"""
 
 from __future__ import annotations
 
@@ -46,11 +51,17 @@ def resolver_instancia(
     numero_equipos_esperado=20,
     mostrar_log=True,
 ):
-    """Descarga una temporada y resuelve su calendario doble Round-Robin.
+    """Construye, resuelve y resume una instancia de temporada.
 
     El CSV se usa para obtener la lista de equipos y validar la temporada. El
     calendario optimizado es nuevo: el archivo no aporta números de jornada
     oficiales suficientes para fijar las fechas de los partidos históricos.
+
+    El modelo crea variables de asignación partido-jornada, localía, breaks y
+    viajes aproximados en jornadas críticas. Después agrega restricciones de
+    Round-Robin, balance de localías y opciones operativas, minimiza la suma
+    ponderada de breaks y viajes, y devuelve el estado y el calendario factible.
+    La parte de viajes solo distingue localía/visita; no calcula distancias.
     """
     # Paso 1: descargar y validar la base de datos de la temporada.
     try:

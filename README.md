@@ -27,7 +27,19 @@ Para construir y validar el conjunto de equipos, así como analizar calendarios 
 
 
 
-**Uso y limitaciones:** los notebooks de `INSTANCIAS_PRUEBA` leen cada CSV directamente desde su URL. El modelo usa los equipos de la temporada para construir un calendario nuevo; los CSV no aportan una correspondencia fiable entre partidos y jornadas oficiales, por lo que no se usan para fijar el calendario optimizado ni para calcular breaks históricos. Las listas de clásicos, estadios compartidos, equipos europeos y jornadas críticas deben completarse con datos adicionales si se quieren activar esas restricciones. Se necesita conexión a Internet y una licencia válida de Gurobi para resolver el modelo.
+**Uso y limitaciones:** los notebooks de `INSTANCIAS_PRUEBA` leen cada CSV directamente desde su URL. El modelo usa los equipos de la temporada para construir un calendario nuevo; los CSV no aportan una correspondencia fiable entre partidos y jornadas oficiales, por lo que no se usan para fijar el calendario optimizado ni para calcular breaks históricos. Las listas de clásicos, estadios compartidos, equipos europeos y jornadas críticas deben completarse con datos adicionales si se quieren activar esas restricciones. El término denominado viajes actualmente aproxima un partido de visita en jornada crítica; no modela distancias ni tiempos de traslado. Se necesita conexión a Internet y una licencia válida de Gurobi para resolver el modelo.
+
+## Activar la licencia de Gurobi en Windows
+
+La activación se hará desde PowerShell o la terminal integrada, no desde una celda del notebook. Cuando Gurobi entregue la clave de licencia, instala Gurobi Optimizer para Windows y ejecuta allí:
+
+```powershell
+grbgetkey CLAVE_ENTREGADA_POR_GUROBI
+```
+
+Reemplaza `CLAVE_ENTREGADA_POR_GUROBI` por la clave real recibida, sin incluirla en archivos del proyecto ni en el historial compartido. Si PowerShell indica que `grbgetkey` no se reconoce, agrega la carpeta `bin` de Gurobi al `PATH` o ejecuta `grbgetkey.exe` usando su ruta completa. Acepta la ubicación predeterminada del archivo `gurobi.lic` salvo que Gurobi indique otra. Luego reinicia el kernel de Jupyter y ejecuta los notebooks.
+
+Los notebooks pueden importar el paquete `gurobipy` antes de la activación, pero no podrán crear y optimizar el modelo hasta que Gurobi encuentre una licencia válida. En `base_2024-2025.ipynb` existe además una celda de instalación interactiva; es opcional si la licencia ya se activó con el comando de terminal anterior.
 
 
 ## Objetivo del proyecto
